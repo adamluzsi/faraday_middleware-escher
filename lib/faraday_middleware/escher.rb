@@ -1,7 +1,6 @@
-require "faraday_middleware/escher/version"
-
-module FaradayMiddleware
-  module Escher
-    # Your code goes here...
-  end
+require 'faraday_middleware'
+module FaradayMiddleware::Escher
+  require 'faraday_middleware/escher/base'
+  require 'faraday_middleware/escher/request_signer'
+  require 'faraday_middleware/escher/response_validator'
 end
