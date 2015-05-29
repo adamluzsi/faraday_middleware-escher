@@ -1,4 +1,4 @@
-class FaradayMiddleware::Escher::RequestSigner < FaradayMiddleware::Escher::Base
+class FaradayMiddleware::Escher::RequestSigner < FaradayMiddleware::Escher::BaseMiddleware
 
   def call(env)
 
@@ -6,13 +6,22 @@ class FaradayMiddleware::Escher::RequestSigner < FaradayMiddleware::Escher::Base
 
     env.request_headers
 
-    # @app.call(env).on_complete do |env|
+    # env[:request_headers]
+
+
+    response = @app.call(env)
+
+    # response.on_complete do |env|
     #   # do something with the response
     #   # env[:response] is now filled in
     # end
 
-    @app.call(env)
+    return response
 
   end
+
+  protected
+
+
 
 end
