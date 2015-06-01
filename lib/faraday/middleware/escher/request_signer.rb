@@ -1,8 +1,8 @@
-class FaradayMiddleware::Escher::RequestSigner < FaradayMiddleware::Escher::BaseMiddleware
+class Faraday::Middleware::Escher::RequestSigner < Faraday::Middleware::Escher::Base
 
   def call(env)
 
-    escher = Escher::Auth.new(@escher_credential_scope, @escher_options)
+    escher = ::Escher::Auth.new(@escher_credential_scope, @escher_options)
 
     uri_path = env[:url].path
     endpoint = uri_path.empty? ? '/' : uri_path

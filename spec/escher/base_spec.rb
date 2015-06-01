@@ -1,5 +1,5 @@
 require_relative '../spec_helper'
-describe FaradayMiddleware::Escher::BaseMiddleware do
+describe FaradayMiddleware::Escher::Base do
 
   let(:app){double('app')}
 

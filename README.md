@@ -28,7 +28,7 @@ The FaradayMiddleware::Escher::RequestSigner will help you sign your requests be
     require 'faraday_middleware/escher'
     conn = Faraday.new do |builder|
     
-      builder.use FaradayMiddleware::Escher::RequestSigner, credential_scope: 'example/credential/scope'  do
+      builder.use Faraday::Middleware::Escher::RequestSigner, credential_scope: 'example/credential/scope'  do
                     {api_key_id: 'EscherExample', api_secret: 'TheBeginningOfABeautifulFriendship'}
                   end
     
@@ -38,7 +38,10 @@ The FaradayMiddleware::Escher::RequestSigner will help you sign your requests be
 
 ```
 
-TODO: Write usage instructions here
+
+### Response Validator 
+
+coming soon! @wip
 
 ## Contributing
 

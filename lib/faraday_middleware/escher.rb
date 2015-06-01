@@ -1,7 +1,14 @@
-require 'escher'
-require 'faraday_middleware'
-module FaradayMiddleware::Escher
-  require 'faraday_middleware/escher/base_middleware'
-  require 'faraday_middleware/escher/request_signer'
-  require 'faraday_middleware/escher/response_validator'
+#backwardCompatibility
+require 'faraday/middleware/escher'
+
+begin
+  require 'faraday_middleware'
+rescue LoadError
 end
+
+unless defined?(FaradayMiddleware)
+  module FaradayMiddleware
+  end
+end
+
+FaradayMiddleware::Escher ||= ::Faraday::Middleware::Escher

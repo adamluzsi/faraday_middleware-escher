@@ -1,5 +1,5 @@
 require 'socket'
-class FaradayMiddleware::Escher::BaseMiddleware < Faraday::Middleware
+class Faraday::Middleware::Escher::Base < Faraday::Middleware
 
   def initialize(app,options={},&escher_keydb_constructor)
 
