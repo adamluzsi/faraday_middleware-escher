@@ -19,6 +19,10 @@ describe FaradayMiddleware::Escher::BaseMiddleware do
 
   subject{ self.described_class.new(app,options) }
 
+  before do
+    allow(Socket).to receive(:gethostname).and_return(host)
+  end
+
   describe '#initialize' do
     describe 'init take an options hash after app, and catch some of its value' do
 

@@ -18,6 +18,26 @@ Or install it yourself as:
 
 ## Usage
 
+### for sign requests 
+
+The FaradayMiddleware::Escher::RequestSigner will help you sign your requests before sending them
+
+```ruby
+
+ 
+    require 'faraday_middleware/escher'
+    conn = Faraday.new do |builder|
+    
+      builder.use FaradayMiddleware::Escher::RequestSigner, credential_scope: 'example/credential/scope'  do
+                    {api_key_id: 'EscherExample', api_secret: 'TheBeginningOfABeautifulFriendship'}
+                  end
+    
+      builder.adapter  :net_http
+    
+    end
+
+```
+
 TODO: Write usage instructions here
 
 ## Contributing

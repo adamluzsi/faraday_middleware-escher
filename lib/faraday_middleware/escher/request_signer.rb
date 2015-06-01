@@ -2,26 +2,29 @@ class FaradayMiddleware::Escher::RequestSigner < FaradayMiddleware::Escher::Base
 
   def call(env)
 
-    # p env.methods - Object.methods
+    escher = Escher::Auth.new(@escher_credential_scope, @escher_options)
 
-    env.request_headers
+    uri_path = env[:url].path
+    endpoint = uri_path.empty? ? '/' : uri_path
 
-    # env[:request_headers]
+    request_data = {
+        uri: endpoint,
+        method: env[:method].to_s.upcase,
+        headers: env[:request_headers].map{|k,v| [k,v] }.push(['host',@host])
+    }
 
+    request_data[:body]= env[:body] unless env[:body].nil?
 
-    response = @app.call(env)
+    escher.sign!(
+        request_data,
+        @escher_keydb_constructor.call,
+        request_data[:headers].map{|ary| ary[0] }
+    )
 
-    # response.on_complete do |env|
-    #   # do something with the response
-    #   # env[:response] is now filled in
-    # end
+    env[:request_headers].merge!(request_data[:headers])
 
-    return response
+    return @app.call(env)
 
   end
-
-  protected
-
-
 
 end
