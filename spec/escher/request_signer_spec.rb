@@ -9,8 +9,13 @@ describe Faraday::Middleware::Escher::RequestSigner do
     let(:target_url) { "http://api-with-escher.example.com" }
     let(:stubs) { Faraday::Adapter::Test::Stubs.new }
 
-    let(:request_expectations){ -> env {} }
-    let(:response_expectations){ -> env {} }
+    let(:request_expectations){ -> env { @request_env = env } }
+    let(:response_expectations){ -> env { @response_env = env } }
+
+    before do
+      @request_env = nil
+      @response_env = nil
+    end
 
     subject do
 
@@ -34,16 +39,6 @@ describe Faraday::Middleware::Escher::RequestSigner do
 
 
     describe '#call' do
-
-      before do
-        @env = nil
-      end
-
-      let(:request_expectations) do
-        -> env do
-          @request_env = env
-        end
-      end
 
       it 'should insert escher request headers for the call' do
 
