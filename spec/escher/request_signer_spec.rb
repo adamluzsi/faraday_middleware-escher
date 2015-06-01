@@ -1,5 +1,5 @@
 require_relative '../spec_helper'
-describe FaradayMiddleware::Escher::RequestSigner do
+describe Faraday::Middleware::Escher::RequestSigner do
   describe 'this is a faraday middleware witch instance will response to call method' do
 
     let(:api_key) { 'superKey' }
@@ -17,7 +17,7 @@ describe FaradayMiddleware::Escher::RequestSigner do
       Faraday.new do |builder|
 
 
-        builder.use FaradayMiddleware::Escher::RequestSigner, credential_scope: 'example/credential/scope'  do
+        builder.use Faraday::Middleware::Escher::RequestSigner, credential_scope: 'example/credential/scope'  do
           {api_key_id: 'EscherExample', api_secret: 'TheBeginningOfABeautifulFriendship'}
         end
 
