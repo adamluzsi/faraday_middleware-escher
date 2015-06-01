@@ -1,4 +1,4 @@
-# FaradayMiddleware::Escher
+# FaradayMiddleware for Escher secure authorization 
 
 escher sign and validation for faraday http rest client
 
