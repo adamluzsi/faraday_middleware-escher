@@ -8,16 +8,16 @@ describe FaradayMiddleware::Escher::BaseMiddleware do
   let(:api_secret){'superSecret'}
 
   let(:options){
-
     {
-        api_key: api_key,
-        api_secret: api_secret,
-        host: host
+        host: host,
+        credential_scope: 'test/test/test'
     }
-
   }
 
-  subject{ self.described_class.new(app,options) }
+  let(:key_db){{api_key_id: 'EscherExample', api_secret: 'TheBeginningOfABeautifulFriendship'}}
+
+
+  subject{ self.described_class.new(app,options) {key_db} }
 
   before do
     allow(Socket).to receive(:gethostname).and_return(host)
@@ -26,7 +26,7 @@ describe FaradayMiddleware::Escher::BaseMiddleware do
   describe '#initialize' do
     describe 'init take an options hash after app, and catch some of its value' do
 
-      %W[ host api_key api_secret ].each do |element|
+      %W[ host ].each do |element|
         it "should save #{element} hast key's value under @#{element}" do
           expect(subject.instance_variable_get("@#{element}")).to eq options[element.to_sym]
         end
