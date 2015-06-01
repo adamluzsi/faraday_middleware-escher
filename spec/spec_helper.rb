@@ -46,3 +46,23 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 end
+
+class ExpectsMiddleware < Faraday::Middleware
+
+  def initialize(app,request_expectations:nil,response_expectations:nil)
+    super(app)
+    @request_expectations = request_expectations
+    @response_expectations = response_expectations
+  end
+
+  def call(env)
+
+    @request_expectations.call(env) if @request_expectations.respond_to?(:call)
+
+    @app.call(env).on_complete do |env|
+      @response_expectations.call(env) if @response_expectations.respond_to?(:call)
+    end
+
+  end
+
+end

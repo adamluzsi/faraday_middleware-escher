@@ -6,67 +6,52 @@ describe FaradayMiddleware::Escher::RequestSigner do
     let(:api_secret) { 'superSecret' }
     let(:host) { 'localhost' }
 
+    let(:target_url) { "http://api-with-escher.example.com" }
     let(:stubs) { Faraday::Adapter::Test::Stubs.new }
+
+    let(:request_expectations){ -> env {} }
+    let(:response_expectations){ -> env {} }
 
     subject do
 
       Faraday.new do |builder|
 
-        builder.use FaradayMiddleware::Escher::RequestSigner,
-                    api_key: api_key,
-                    api_secret: api_secret,
-                    host: host
+
+        builder.use FaradayMiddleware::Escher::RequestSigner, credential_scope: 'example/credential/scope'  do
+          {api_key_id: 'EscherExample', api_secret: 'TheBeginningOfABeautifulFriendship'}
+        end
+
+        builder.use ExpectsMiddleware, request_expectations: request_expectations
+        builder.use ExpectsMiddleware, response_expectations: response_expectations
 
         builder.adapter :test, stubs do |stub|
-          stub.get('/ebi') { |env| [200, {}, 'shrimp'] }
+          stub.get(target_url) { |env| [200, {}, 'shrimp'] }
         end
 
       end
 
     end
 
-    let(:connection) do
-      Faraday.new do |builder|
-        builder.use FaradayMiddleware::Escher::RequestSigner,
-                    api_key: api_key,
-                    api_secret: api_secret,
-                    host: host
-
-        builder.use FaradayMiddleware::FollowRedirects
-        builder.adapter Faraday.default_adapter
-      end
-    end
-
-    let(:target_url) { "http://api-with-escher.example.com" }
 
     describe '#call' do
 
-      it ''
-
-      it "redirects" do
-
-        # stubs.get('/uni') {[ 200, {}, 'urchin' ]}
-
-        request_mock = stub_request(:get, target_url)
-
-        puts request_mock.methods - Object.methods
-
-        stub_request(:get, "http://facebook.com").to_return(
-            :status => 302,
-            :headers => {"Location" => "http://www.facebook.com/"})
-
-        stub_request(:get, "http://www.facebook.com/").to_return(
-            :status => 302,
-            :headers => {"Location" => "https://www.facebook.com/"})
-
-        stub_request(:get, "https://www.facebook.com/")
-
-        response = connection.get "http://facebook.com"
-
-        expect(response.env[:url].to_s).to eq("https://www.facebook.com/")
-
+      before do
+        @env = nil
       end
 
+      let(:request_expectations) do
+        -> env do
+          @request_env = env
+        end
+      end
+
+      it 'should insert escher request headers for the call' do
+
+        expect( subject.get(target_url).status ).to eq 200
+        expect( @request_env[:request_headers]["X-Escher-Auth"].nil? ).to eq false
+        expect( @request_env[:request_headers]["X-Escher-Date"].nil? ).to eq false
+
+      end
 
     end
 
