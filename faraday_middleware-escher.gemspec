@@ -20,6 +20,10 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency('rspec')
   spec.add_development_dependency('webmock')
 
+  spec.add_development_dependency('rack')
+  spec.add_development_dependency('escher-keypool')
+  spec.add_development_dependency('escher-rack_middleware')
+
   spec.add_dependency('faraday')
   spec.add_dependency('escher')
 

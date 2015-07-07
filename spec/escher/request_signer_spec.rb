@@ -2,6 +2,8 @@ require_relative '../spec_helper'
 describe Faraday::Middleware::Escher::RequestSigner do
   describe 'this is a faraday middleware witch instance will response to call method' do
 
+    let(:key_db){{api_key_id: 'EscherExample', api_secret: 'TheBeginningOfABeautifulFriendship'}}
+
     let(:api_key) { 'superKey' }
     let(:api_secret) { 'superSecret' }
     let(:host) { 'localhost' }

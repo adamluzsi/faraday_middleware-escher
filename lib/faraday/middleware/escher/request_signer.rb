@@ -1,4 +1,15 @@
+require 'faraday/middleware/escher'
 class Faraday::Middleware::Escher::RequestSigner < Faraday::Middleware::Escher::Base
+
+  def initialize(app,options={},&active_key)
+
+    super(app,options)
+
+    active_key_cons = active_key || options[:active_key] || options[:key]
+    raise('Escher active key constructor must be a lambda/block') unless active_key_cons.is_a?(Proc)
+    @escher_active_key_constructor = active_key_cons
+
+  end
 
   def call(env)
 
@@ -17,7 +28,7 @@ class Faraday::Middleware::Escher::RequestSigner < Faraday::Middleware::Escher::
 
     escher.sign!(
         request_data,
-        @escher_keydb_constructor.call,
+        @escher_active_key_constructor.call,
         request_data[:headers].map{|ary| ary[0] }
     )
 

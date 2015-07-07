@@ -1,6 +1,4 @@
 #backwardCompatibility
-require 'faraday/middleware/escher'
-
 begin
   require 'faraday_middleware'
 rescue LoadError
@@ -11,4 +9,5 @@ unless defined?(FaradayMiddleware)
   end
 end
 
+require 'faraday/middleware/escher'
 FaradayMiddleware::Escher ||= ::Faraday::Middleware::Escher

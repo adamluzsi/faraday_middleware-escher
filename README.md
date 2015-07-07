@@ -23,16 +23,18 @@ Or install it yourself as:
 The FaradayMiddleware::Escher::RequestSigner will help you sign your requests before sending them
 
 ```ruby
-
- 
+    
     require 'faraday_middleware/escher'
+    
     conn = Faraday.new do |builder|
     
-      builder.use Faraday::Middleware::Escher::RequestSigner, credential_scope: 'example/credential/scope'  do
-                    {api_key_id: 'EscherExample', api_secret: 'TheBeginningOfABeautifulFriendship'}
-                  end
+      builder.use FaradayMiddleware::Escher::RequestSigner,
+                  credential_scope: CredentialScope,
+                  options: AuthOptions,
+                  active_key: -> { Escher::Keypool.new.get_active_key('EscherExample') }
     
-      builder.adapter  :net_http
+      builder.adapter :net_http
+    
     
     end
 
@@ -41,7 +43,50 @@ The FaradayMiddleware::Escher::RequestSigner will help you sign your requests be
 
 ### Response Validator 
 
-coming soon! @wip
+The FaradayMiddleware::Escher::ResponseValidator will help you authenticate responses on receiving
+
+```ruby
+    
+    require 'faraday_middleware/escher'
+    
+    conn = Faraday.new do |builder|
+    
+      builder.use FaradayMiddleware::Escher::ResponseValidator,
+                  credential_scope: CredentialScope,
+                  options: AuthOptions,
+                  keydb_constructor: -> { Escher::Keypool.new.get_key_db }
+    
+      builder.adapter :net_http
+    
+    
+    end
+
+```
+
+### You can mix the two in one case
+
+```ruby
+
+    require 'faraday_middleware/escher'
+    
+    conn = Faraday.new do |builder|
+    
+      builder.use FaradayMiddleware::Escher::RequestSigner,
+                  credential_scope: CredentialScope,
+                  options: AuthOptions,
+                  active_key: -> { Escher::Keypool.new.get_active_key('EscherExample') }
+    
+      builder.use FaradayMiddleware::Escher::ResponseValidator,
+                  credential_scope: CredentialScope,
+                  options: AuthOptions,
+                  keydb_constructor: -> { Escher::Keypool.new.get_key_db }
+    
+      builder.adapter :net_http
+    
+    
+    end
+
+```
 
 ## Contributing
 

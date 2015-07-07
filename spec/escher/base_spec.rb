@@ -14,10 +14,7 @@ describe FaradayMiddleware::Escher::Base do
     }
   }
 
-  let(:key_db){{api_key_id: 'EscherExample', api_secret: 'TheBeginningOfABeautifulFriendship'}}
-
-
-  subject{ self.described_class.new(app,options) {key_db} }
+  subject{ self.described_class.new(app,options) }
 
   before do
     allow(Socket).to receive(:gethostname).and_return(host)
