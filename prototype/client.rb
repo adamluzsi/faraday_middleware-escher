@@ -11,10 +11,10 @@ conn = Faraday.new do |builder|
               options: AuthOptions,
               active_key: -> { Escher::Keypool.new.get_active_key('EscherExample') }
 
-  builder.use FaradayMiddleware::Escher::ResponseValidator,
-              credential_scope: CredentialScope,
-              options: AuthOptions,
-              keydb_constructor: -> { Escher::Keypool.new.get_key_db }
+  # builder.use FaradayMiddleware::Escher::ResponseValidator,
+  #             credential_scope: CredentialScope,
+  #             options: AuthOptions,
+  #             keydb_constructor: -> { Escher::Keypool.new.get_key_db }
 
   builder.adapter :net_http
 
@@ -28,4 +28,6 @@ puts "\nResponse:",
        r.url('http://localhost:9292')
        r.body='{ "name": "Unagi" }'
        r.headers['X-Origin'] = JSON.generate(sender: 'cat', host: 'suite42')
+       r.params['kutya1']= 'cica1'
+       r.params['kutya2']= 'cica2'
      }.body.inspect

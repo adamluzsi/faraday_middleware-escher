@@ -17,9 +17,10 @@ class Faraday::Middleware::Escher::RequestSigner < Faraday::Middleware::Escher::
 
     uri_path = env[:url].path
     endpoint = uri_path.empty? ? '/' : uri_path
+    endpoint_with_query = [endpoint,env[:url].query].join('?')
 
     request_data = {
-        uri: endpoint,
+        uri: endpoint_with_query,
         method: env[:method].to_s.upcase,
         headers: env[:request_headers].map{|k,v| [k,v] }.push(['host',@host])
     }

@@ -7,7 +7,6 @@ Escher::RackMiddleware.config do |c|
   c.add_credential_updater { Escher::Keypool.new.get_key_db }
 end
 
-
 require 'socket'
 class YourAwesomeApp
 
@@ -37,6 +36,8 @@ class YourAwesomeApp
       response.headers[key]=value
     end
 
+    response.headers['kutya']='cica'
+
     response.write response_payload
     response.status = 200
     response.finish
@@ -45,6 +46,33 @@ class YourAwesomeApp
 
 end
 
+require 'yaml'
+class EscherResponseSigner
 
+  def initialize(app,options={})
+    @app = app
+
+
+  end
+
+  def call(env)
+    rstatus,rheaders,rbody = @app.call(env)
+    response = Rack::Response.new(rbody,rstatus,rheaders)
+
+    <<-YAML
+
+    YAML
+
+    puts YAML.dump response
+    # puts YAML.dump response
+
+
+    response
+  end
+
+end
+
+use EscherResponseSigner
 use Escher::RackMiddleware
+
 run YourAwesomeApp.new
