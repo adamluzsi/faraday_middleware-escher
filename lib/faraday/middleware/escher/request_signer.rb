@@ -20,12 +20,12 @@ class Faraday::Middleware::Escher::RequestSigner < Faraday::Middleware::Escher::
     endpoint_with_query = [endpoint,env[:url].query].join('?')
 
     request_headers = Hash[env[:request_headers].map{|k,v| [k,v] }]
-    request_headers['host'] ||= @host
+    request_headers['host'] ||= @host || env[:url].host
  
     request_data = {
         uri: endpoint_with_query,
         method: env[:method].to_s.upcase,
-        headers: request_headers.to_a # env[:request_headers].map{|k,v| [k,v] }.push(['host',@host])
+        headers: request_headers.to_a
     }
 
     request_data[:body]= env[:body] unless env[:body].nil?
