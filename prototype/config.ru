@@ -13,32 +13,7 @@ class YourAwesomeApp
   def call(env)
 
     response = Rack::Response.new
-    response_payload = 'OK'
-
-    escher = ::Escher::Auth.new(CredentialScope, AuthOptions)
-
-    request_data = {
-
-        uri: '/',
-        method: 'GET',
-        headers: [['host',Socket.gethostname]],
-        body: response_payload
-
-    }
-
-    escher.sign!(
-        request_data,
-        Escher::Keypool.new.get_active_key( env['escher.request.api_key_id'] ),
-        response.headers.map { |k, _| k }
-    )
-
-    request_data[:headers].each do |key,value|
-      response.headers[key]=value
-    end
-
-    response.headers['kutya']='cica'
-
-    response.write response_payload
+    response.write 'OK'
     response.status = 200
     response.finish
 
