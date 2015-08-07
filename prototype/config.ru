@@ -46,33 +46,5 @@ class YourAwesomeApp
 
 end
 
-require 'yaml'
-class EscherResponseSigner
-
-  def initialize(app,options={})
-    @app = app
-
-
-  end
-
-  def call(env)
-    rstatus,rheaders,rbody = @app.call(env)
-    response = Rack::Response.new(rbody,rstatus,rheaders)
-
-    <<-YAML
-
-    YAML
-
-    puts YAML.dump response
-    # puts YAML.dump response
-
-
-    response
-  end
-
-end
-
-use EscherResponseSigner
 use Escher::RackMiddleware
-
 run YourAwesomeApp.new
