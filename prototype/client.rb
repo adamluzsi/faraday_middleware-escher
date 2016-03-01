@@ -8,7 +8,7 @@ conn = Faraday.new(url: 'http://localhost:9292') do |builder|
   builder.use FaradayMiddleware::Escher::RequestSigner,
               credential_scope: CredentialScope,
               options: AuthOptions,
-              active_key: -> { Escher::Keypool.new.get_active_key('EscherExample') }
+              active_key: -> { p Escher::Keypool.new.get_active_key('EscherExample') }
 
   builder.adapter :net_http
 

@@ -1,9 +1,9 @@
 require 'faraday/middleware/escher'
 class Faraday::Middleware::Escher::RequestSigner < Faraday::Middleware::Escher::Base
 
-  def initialize(app,options={},&active_key)
+  def initialize(app, options={}, &active_key)
 
-    super(app,options)
+    super(app, options)
 
     active_key_cons = active_key || options[:active_key] || options[:key]
     raise('Escher active key constructor must be a lambda/block') unless active_key_cons.is_a?(Proc)
@@ -17,11 +17,11 @@ class Faraday::Middleware::Escher::RequestSigner < Faraday::Middleware::Escher::
 
     uri_path = env[:url].path
     endpoint = uri_path.empty? ? '/' : uri_path
-    endpoint_with_query = [endpoint,env[:url].query].join('?')
+    endpoint_with_query = [endpoint, env[:url].query].join('?')
 
-    request_headers = Hash[env[:request_headers].map{|k,v| [k,v] }]
+    request_headers = Hash[env[:request_headers].map { |k, v| [k.to_s.downcase, v] }]
     request_headers['host'] ||= @host || env[:url].host
- 
+
     request_data = {
         uri: endpoint_with_query,
         method: env[:method].to_s.upcase,
@@ -33,7 +33,7 @@ class Faraday::Middleware::Escher::RequestSigner < Faraday::Middleware::Escher::
     escher.sign!(
         request_data,
         @escher_active_key_constructor.call,
-        request_data[:headers].map{|ary| ary[0] }
+        request_data[:headers].map { |ary| ary[0] }
     )
 
     env[:request_headers].merge!(request_data[:headers])
